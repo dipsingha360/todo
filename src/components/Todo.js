@@ -18,8 +18,12 @@ function Todo() {
     setItems(filteredItems);
   };
 
+  const deleteAll = () => {
+    setItems([]);
+  };
+
   return (
-    <div className="flex flex-col gap-4 w-screen h-screen justify-start py-20 items-center">
+    <div className="flex flex-col gap-4 w-screen justify-start py-20 items-center">
       <div className="title flex flex-col gap-3 mb-10 justify-center items-center ">
         <h1 className="text-6xl font-semibold text-white">
           To<span className="text-orange-500 ">Do</span>
@@ -66,6 +70,13 @@ function Todo() {
           </div>
         </div>
       ))}
+
+      <button
+        className="bg-orange-500 px-5 py-1 rounded font-medium text-orange-50 hover:bg-orange-500/90 duration-300 mt-10"
+        onClick={deleteAll}
+      >
+        {items.length > 0 ? "Remove all" : ""}
+      </button>
     </div>
   );
 }
