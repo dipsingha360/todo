@@ -1,9 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlinePlus, AiOutlineDelete } from "react-icons/ai";
 
 function Todo() {
+  // get data from local storage
+  const getLocal = () => {
+    let list = localStorage.getItem("lists");
+    // console.log(list);
+    if (list) {
+      return JSON.parse(localStorage.getItem("lists"));
+    } else {
+      return [];
+    }
+  };
+
+  //useState
   const [inputItem, setInputItem] = useState("");
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState(getLocal());
+
+  //useEffect
+  useEffect(() => {
+    // add data to local storege
+    localStorage.setItem("lists", JSON.stringify(items));
+  }, [items]);
 
   // event handlers
   const addItem = () => {
@@ -72,7 +90,7 @@ function Todo() {
       ))}
 
       <button
-        className="bg-orange-500 px-5 py-1 rounded font-medium text-orange-50 hover:bg-orange-500/90 duration-300 mt-10"
+        className="bg-orange-500 px-5 py-1 rounded font-medium text-orange-50 hover:bg-orange-500/90 duration-300 mt-2"
         onClick={deleteAll}
       >
         {items.length > 0 ? "Remove all" : ""}
