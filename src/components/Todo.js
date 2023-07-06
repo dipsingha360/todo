@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { AiOutlinePlus, AiOutlineDelete } from "react-icons/ai";
-import { FiEdit } from "react-icons/fi";
+import { FiEdit, FiCheck } from "react-icons/fi";
 
 function Todo() {
   // get data from local storage
@@ -17,6 +17,8 @@ function Todo() {
   //useState
   const [inputItem, setInputItem] = useState("");
   const [items, setItems] = useState(getLocal());
+  const [toggle, setToggle] = useState(false);
+  const [isEdit, setIsEdit] = useState(null);
 
   //useEffect
   useEffect(() => {
@@ -27,11 +29,25 @@ function Todo() {
   // event handlers
   // add handler
   const addItem = () => {
-    const allItem = { id: new Date().getTime().toString(), text: inputItem };
-    inputItem ? setItems([...items, allItem]) : alert("First add your task");
+    // const allItem = { id: new Date().getTime().toString(), text: inputItem };
+    // inputItem ? setItems([...items, allItem]) : alert("First add your task");
 
-    //empty field after submit
-    setInputItem("");
+    if (!inputItem) {
+      alert("First add your task");
+    } else if (inputItem && toggle) {
+      setItems(
+        items.map((item) =>
+          item.id === isEdit ? { ...item, text: inputItem } : item
+        )
+      );
+      setInputItem("");
+      setToggle(false);
+    } else {
+      const allItem = { id: new Date().getTime().toString(), text: inputItem };
+      setItems([...items, allItem]);
+      //empty field after submit
+      setInputItem("");
+    }
   };
 
   // single delete handler
@@ -49,7 +65,14 @@ function Todo() {
 
   //edit handler
   const editItem = (id) => {
-    console.log(id);
+    // console.log(id);
+    let newEditItem = items.find((item) => {
+      return id === item.id;
+    });
+
+    setToggle(true);
+    setInputItem(newEditItem.text);
+    setIsEdit(id);
   };
 
   return (
@@ -74,11 +97,20 @@ function Todo() {
             value={inputItem}
             onChange={(e) => setInputItem(e.target.value)}
           />
-          <AiOutlinePlus
-            className=" text-orange-50 bg-transparent text-xl hover:text-orange-300 duration-300 cursor-pointer"
-            title="Click to add item"
-            onClick={addItem}
-          />
+
+          {toggle ? (
+            <FiCheck
+              className=" text-orange-50 bg-transparent text-xl hover:text-orange-300 duration-300 cursor-pointer"
+              title="Update item"
+              onClick={addItem}
+            />
+          ) : (
+            <AiOutlinePlus
+              className=" text-orange-50 bg-transparent text-xl hover:text-orange-300 duration-300 cursor-pointer"
+              title="Click to add item"
+              onClick={addItem}
+            />
+          )}
         </div>
       </div>
 
