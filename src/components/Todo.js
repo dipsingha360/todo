@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { AiOutlinePlus, AiOutlineDelete } from "react-icons/ai";
+import { FiEdit } from "react-icons/fi";
 
 function Todo() {
   // get data from local storage
@@ -24,20 +25,31 @@ function Todo() {
   }, [items]);
 
   // event handlers
+  // add handler
   const addItem = () => {
-    inputItem ? setItems([...items, inputItem]) : alert("First add your task");
+    const allItem = { id: new Date().getTime().toString(), text: inputItem };
+    inputItem ? setItems([...items, allItem]) : alert("First add your task");
+
+    //empty field after submit
     setInputItem("");
   };
 
-  const deleteItem = (index) => {
-    const filteredItems = items.filter((item, id) => {
-      return index !== id;
+  // single delete handler
+  const deleteItem = (id) => {
+    const filteredItems = items.filter((item) => {
+      return id !== item.id;
     });
     setItems(filteredItems);
   };
 
+  // delete all handler
   const deleteAll = () => {
     setItems([]);
+  };
+
+  //edit handler
+  const editItem = (id) => {
+    console.log(id);
   };
 
   return (
@@ -71,20 +83,26 @@ function Todo() {
       </div>
 
       {/* shows item  */}
-      {items.map((item, index) => (
+      {items.map((item) => (
         <div
           className="showItems bg-orange-50 px-5 rounded-md w-96 h-10  flex items-center hover: duration-300"
-          key={index}
+          key={item.id}
         >
           <div className="eachItem bg-transparent w-screen flex  justify-between items-center">
             <h3 className="text-orange-800 font-medium bg-transparent ">
-              {item}
+              {item.text}
             </h3>
-            <AiOutlineDelete
-              className="right-4 top-3 text-orange-800 bg-transparent font-bold text-xl hover:text-orange-800/50 duration-300 cursor-pointer"
-              title="Delet item"
-              onClick={() => deleteItem(index)}
-            />
+            <div className="icons flex gap-2 bg-transparent items-center">
+              <FiEdit
+                className="text-orange-800 bg-transparent font-bold text-xl hover:text-orange-800/50 duration-300 cursor-pointer"
+                onClick={() => editItem(item.id)}
+              />
+              <AiOutlineDelete
+                className=" text-orange-800 bg-transparent font-bold text-xl hover:text-orange-800/50 duration-300 cursor-pointer w-6 h-6"
+                title="Delet item"
+                onClick={() => deleteItem(item.id)}
+              />
+            </div>
           </div>
         </div>
       ))}
